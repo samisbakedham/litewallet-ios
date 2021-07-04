@@ -238,7 +238,9 @@ struct CardView: View {
 
 struct CardView_Previews: PreviewProvider {
     
-    static let viewModel = CardViewModel()
+    static let amount100 = MockSeeds.amount100
+    
+    static let viewModel = CardViewModel(litewalletAmount: amount100)
       
     static var previews: some View {
         

@@ -339,6 +339,7 @@ class TabBarViewController: UIViewController, Subscriber, Trackable, UITabBarDel
                 }
                 
                 cardVC.parentFrame = self.containerView.frame
+                
 				
             case "loafwallet.BuyTableViewController":
                 guard let buyVC = contentController as? BuyTableViewController else  {

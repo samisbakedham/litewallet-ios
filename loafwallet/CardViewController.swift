@@ -20,6 +20,8 @@ class CardViewController: UIViewController {
     var cardLoggedInView: CardLoggedInView?
     
     var cardView: CardView?
+    
+    var litewalletBalance: Amount?
  
     var parentFrame: CGRect?
     
@@ -30,9 +32,9 @@ class CardViewController: UIViewController {
     private func updateLoginStatusFromViewModel() {
         
         guard let viewModel = self.viewModel else {
+            NSLog("ERROR: CardViewModel not loaded")
             return
         }
-        
      
         // Verifies the stack has only one VC and it is the UIHostingController
         DispatchQueue.main.async {
@@ -64,9 +66,11 @@ class CardViewController: UIViewController {
          
      override func viewDidLoad() {
         
-        guard let viewModel = self.viewModel else {
+        guard let balance = self.litewalletBalance else {
             return
         }
+        
+        self.viewModel = CardViewModel(litewalletAmount: balance)
          
         self.updateLoginStatusFromViewModel()
  
@@ -76,7 +80,7 @@ class CardViewController: UIViewController {
                      object: nil,
                      queue: nil) { _ in
             
-            viewModel.fetchCardWalletDetails {
+            self.viewModel?.fetchCardWalletDetails {
                 print("Logged in updated wallet values")
             }
 			

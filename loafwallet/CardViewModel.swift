@@ -20,7 +20,6 @@ class CardViewModel: ObservableObject {
         case litewalletAndCardNonZero
     }
     
-    
     //MARK: - Login Status
     @Published
     var isLoggedIn: Bool = false
@@ -35,6 +34,9 @@ class CardViewModel: ObservableObject {
     @Published
     var walletBalanceStatus: WalletBalanceStatus?
     
+    //MARK: - Public Variables
+    
+    /// Amount class contains LTC,  fiat rate, etc.
     var litewalletAmount: Amount
      
     init(litewalletAmount: Amount) {
@@ -61,7 +63,6 @@ class CardViewModel: ObservableObject {
             case _ where cardBalance > 0.0 &&
                     litewalletAmount.amountForLtcFormat > 0.0:
                 return .litewalletAndCardNonZero
-                
             default:
                 return .cardWalletEmpty
         }
@@ -108,6 +109,7 @@ class CardViewModel: ObservableObject {
                     self.walletBalanceStatus = self.fetchBalanceStatus(cardBalance: availableCardBalance)
                     
                 }
+                
             } catch {
                 print("Error: Incomplete dictionary data from partner API")
                 LWAnalytics.logEventWithParameters(itemName:._20210405_TAWDF) 

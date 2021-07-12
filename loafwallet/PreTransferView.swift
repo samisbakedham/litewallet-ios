@@ -21,14 +21,15 @@ struct PreTransferView: View {
     var body: some View {
         
         GeometryReader { geometry in
-            
+             
             RoundedRectangle(cornerRadius: 12.0)
-                .frame(width:.infinity,
-                       height: 140.0,
+                .frame(height: 140.0,
                        alignment: .center)
+                .frame(maxWidth: .infinity)
                 .padding([.top,.bottom,.leading], 16.0)
-                .padding([.trailing], 90.0)                     .foregroundColor(Color(UIColor.litecoinGray))
-                .shadow(radius: 2.0, x: 3.0, y: 3.0)
+                .padding([.trailing], 40.0)
+                .foregroundColor(Color(UIColor.litecoinGray))
+                .shadow(color: viewModel.isTapped ? .clear : .gray , radius:2.0, x: 3.0, y: 3.0)
                 .overlay(
                     VStack {
                         
@@ -49,13 +50,13 @@ struct PreTransferView: View {
                                 
                             } else {
                                 RoundedRectangle(cornerRadius: 11)
-                                    .frame(width:72.0,
+                                    .frame(width: 72.0,
                                            height: 72.0,
                                            alignment: .center)
                                     .padding(.top, 10.0)
-                                    .padding(.leading, 24.0)                    .foregroundColor(.white)
-                                    .shadow(radius: 2.0, x: 3.0, y: 3.0)
-                                    .overlay(
+                                    .padding(.leading, 24.0)
+                                    .foregroundColor(.white)
+                                    .shadow(color: viewModel.isTapped ? .clear : .gray , radius:2.0, x: 3.0, y: 3.0)                                    .overlay(
                                         Image(viewModel.walletType.description)
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
@@ -73,7 +74,8 @@ struct PreTransferView: View {
                         HStack{
                             
                             Text("\(viewModel.walletType.balanceLabel) ")
-                                .frame(width: .infinity, height: 25, alignment: .leading)
+                                .frame(height: 25, alignment: .leading)
+                                .frame(maxWidth: .infinity)
                                 .foregroundColor(.black)
                                 .font(Font(UIFont.barlowBold(size: 18.0)))
                                 .padding(.leading, 24.0)
@@ -81,7 +83,8 @@ struct PreTransferView: View {
                                 .padding(.trailing, 2.0)
                             
                             Text("\(viewModel.balance) Ł")
-                                .frame(width: .infinity, height: 25, alignment: .leading)
+                                .frame(height: 25, alignment: .leading)
+                                .frame(maxWidth: .infinity)
                                 .foregroundColor(.black)
                                 .font(Font(UIFont.barlowRegular(size: 18.0)))
                                 .padding(.leading, 2.0)

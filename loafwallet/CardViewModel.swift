@@ -10,16 +10,15 @@ import Foundation
 import SwiftUI
 import KeychainAccess
  
+enum WalletBalanceStatus: Int {
+    case litewalletAndCardEmpty
+    case cardWalletEmpty
+    case litewalletEmpty
+    case litewalletAndCardNonZero
+}
 
 class CardViewModel: ObservableObject {
-    
-    enum WalletBalanceStatus: Int {
-        case litewalletAndCardEmpty
-        case cardWalletEmpty
-        case litewalletEmpty
-        case litewalletAndCardNonZero
-    }
-    
+        
     //MARK: - Login Status
     @Published
     var isLoggedIn: Bool = false

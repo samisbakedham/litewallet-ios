@@ -44,5 +44,28 @@ extension View {
         loafwallet.CardV1ToastView(isShowingCardToast: isShowingCardToast,
                                    presenting: self)
     }
+    
+    //https://stackoverflow.com/questions/56760335/round-specific-corners-swiftui
+    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+        clipShape( RoundedCorner(radius: radius, corners: corners) )
+    }
+    
+    public func addBorder<S>(_ content: S, width: CGFloat = 1, cornerRadius: CGFloat) -> some View where S : ShapeStyle {
+            let roundedRect = RoundedRectangle(cornerRadius: cornerRadius)
+            return clipShape(roundedRect)
+                .overlay(roundedRect.strokeBorder(content, lineWidth: width))
+    }
 }
  
+struct RoundedCorner: Shape {
+    
+    var radius: CGFloat = .infinity
+    var corners: UIRectCorner = .allCorners
+    
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        return Path(path.cgPath)
+    }
+}
+
+

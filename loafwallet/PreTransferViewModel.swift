@@ -29,7 +29,7 @@ class PreTransferViewModel: ObservableObject {
         var balanceLabel: String {
             switch self {
                 case .litecoinCard:
-                    return "Litecoin Card Balance:"
+                    return "Card Balance:"
                 case .litewallet:
                     return "Litewallet Balance:"
             }
@@ -40,11 +40,11 @@ class PreTransferViewModel: ObservableObject {
     
     var walletType: WalletType
     
-    var balance: Float
+    var balance: Double
     
     var isTapped: Bool = false
     
-    init(walletType: WalletType, balance: Float) {
+    init(walletType: WalletType, balance: Double) {
         
         self.walletType = walletType
         

@@ -10,7 +10,8 @@ import SwiftUI
 
 struct PreTransferView: View {
     
-    let leadingpadding: CGFloat = 16.0
+    let mainPadding: CGFloat = 20.0
+    let generalCornerRadius: CGFloat = 12.0
     
     //MARK: - Combine Variables
     @ObservedObject
@@ -28,12 +29,11 @@ struct PreTransferView: View {
         GeometryReader { geometry in
             
             ZStack {
-                RoundedRectangle(cornerRadius: 12.0)
-                    .frame(height: 130.0,
+                RoundedRectangle(cornerRadius: generalCornerRadius)
+                    .frame(height: 150.0,
                            alignment: .center)
                     .frame(maxWidth: .infinity)
-                    .padding([.top,.bottom,.leading], leadingpadding)
-                    .padding([.trailing], 40.0)
+                    .padding(mainPadding)
                     .foregroundColor(Color.litecoinGray)
                     .shadow(color: wasTapped ? .clear : .gray , radius:2.0, x: 3.0, y: 3.0)
                     .overlay(
@@ -54,34 +54,29 @@ struct PreTransferView: View {
                                         .contrast(0.95)
                                         .shadow(radius: 2.0, x: 3.0, y: 3.0)
                                         .padding(.top, 2.0)
-                                        .padding(.leading, 24.0)
-                                    
+                                        .padding(.leading, mainPadding + 12.0)
+
                                 } else {
                                     
                                     LitewalletIconView()
                                         .padding(.top, 2.0)
-                                        .padding(.leading, 24.0)
+                                        .padding(.leading, mainPadding + 12.0)
                                 }
                                 Spacer()
                             }
                             
                             HStack {
                                 
-                                Text("\(viewModel.walletType.balanceLabel)")
-                                    .frame(minWidth: 0,
-                                           maxWidth: .infinity,
-                                           alignment: .leading)
+                                Text("\(viewModel.walletType.balanceLabel):")
                                     .foregroundColor(.black)
-                                    .font(Font(UIFont.barlowBold(size: 18.0)))
-                                    .padding(.leading, 24.0)
-                                
+                                    .font(Font(UIFont.barlowSemiBold(size: 20.0)))
+                                    .padding(.leading, mainPadding + 12.0)
+
                                 Text("\(viewModel.balance) Ł")
-                                    .frame(minWidth: 0,
-                                           maxWidth: .infinity,
-                                           alignment: .leading)
                                     .foregroundColor(.black)
                                     .multilineTextAlignment(.leading)
-                                    .font(Font(UIFont.barlowRegular(size: 18.0)))
+                                    .font(Font(UIFont.barlowRegular(size: 22.0)))
+                                    .padding(.leading, 10.0)
                                 
                                 Spacer()
                             }
@@ -95,20 +90,26 @@ struct PreTransferView: View {
                         Button(action: {
                             print("GGGG")
                         }) {
-                            Text("TRANSFER")
-                                .frame(width: 120.0,
-                                       height: 40.0,
+                             
+                            Text(viewModel.balance == 0.0 ? "--" : S.LitecoinCard.Transfer.title.localizedUppercase)
+                                .frame(width: 180.0,
+                                       height: 50.0,
                                        alignment: .center)
-                                .font(Font(UIFont.barlowRegular(size: 18.0)))
-                                .foregroundColor(.white)
-                                .background(Color.liteWalletBlue)
+                                .font(Font(UIFont.barlowRegular(size: 22.0)))
+                                .foregroundColor(viewModel.balance == 0.0 ? .gray : .white)
+                                .background(viewModel.balance == 0.0 ? Color.litewalletLightGray : Color.liteWalletBlue)
                         }
-                        .padding(.trailing, 40.0)
-                        .padding(.top, 40.0)
+                        .cornerRadius( generalCornerRadius, corners: [.topRight, .bottomLeft])
+                        .disabled(viewModel.balance == 0.0 ? true : false)
                     }
                     
                     Spacer()
+                    
                 }
+                .frame(height: 150.0,
+                       alignment: .center)
+                .frame(maxWidth: .infinity)
+                .padding([.trailing], mainPadding)
             }
 
             

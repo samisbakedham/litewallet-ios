@@ -45,7 +45,9 @@ extension View {
                                    presenting: self)
     }
     
-    //https://stackoverflow.com/questions/56760335/round-specific-corners-swiftui
+    /// From Stack Overflow
+    /// https://stackoverflow.com/questions/56760335/round-specific-corners-swiftui
+    
     func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
         clipShape( RoundedCorner(radius: radius, corners: corners) )
     }
@@ -56,7 +58,8 @@ extension View {
                 .overlay(roundedRect.strokeBorder(content, lineWidth: width))
     }
 }
- 
+
+/// Helper struct for the custom Rounded Rect corners
 struct RoundedCorner: Shape {
     
     var radius: CGFloat = .infinity

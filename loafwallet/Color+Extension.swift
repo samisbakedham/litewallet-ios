@@ -19,6 +19,10 @@ extension Color {
         return Color(UIColor.liteWalletDarkBlue)
     }
     
+    static var litewalletLightGray: Color { //F8F8F8
+        return Color(UIColor.litewalletLightGray)
+    }
+    
     static var litecoinGray: Color { //F1F1F1
         return Color(UIColor.litecoinGray)
     }

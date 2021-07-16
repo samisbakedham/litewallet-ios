@@ -29,9 +29,9 @@ class PreTransferViewModel: ObservableObject {
         var balanceLabel: String {
             switch self {
                 case .litecoinCard:
-                    return "Card Balance:"
+                    return S.LitecoinCard.cardBalance
                 case .litewallet:
-                    return "Litewallet Balance:"
+                    return S.LitecoinCard.Transfer.litewalletBalance
             }
         }
     }
@@ -42,7 +42,7 @@ class PreTransferViewModel: ObservableObject {
     
     var balance: Double
     
-    var isTapped: Bool = false
+    var wasTapped: Bool = false
     
     init(walletType: WalletType, balance: Double) {
         

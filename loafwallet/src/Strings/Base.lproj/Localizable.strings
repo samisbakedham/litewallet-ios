@@ -1398,3 +1398,12 @@
 
 /* History Current Litecoin Value */
 "History.currentLitecoinValue" = "Current LTC value in";
+
+/* Litewallet balance label */
+"LitecoinCard.Transfer.litewalletBalance" = "Litewallet balance";
+
+/* Transfer title */
+"LitecoinCard.Transfer.title" = "Transfer";
+
+/* Description of action */
+"LitecoinCard.Transfer.description" = "Choose transferring wallet";

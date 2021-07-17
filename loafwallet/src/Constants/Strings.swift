@@ -145,7 +145,7 @@ enum S {
         //MARK: - Transfer
         enum Transfer {
             static let title = NSLocalizedString("LitecoinCard.Transfer.title", value: "Transfer", comment: "Transfer title")
-            static let description = NSLocalizedString("LitecoinCard.Transfer.description", value: "Choose transferring wallet", comment: "Description of action")
+            static let description = NSLocalizedString("LitecoinCard.Transfer.description", value: "Choose the transferring wallet", comment: "Description of action")
             static let litewalletBalance = NSLocalizedString("LitecoinCard.Transfer.litewalletBalance", value: "Litewallet balance", comment: "Litewallet balance label")
         }
         

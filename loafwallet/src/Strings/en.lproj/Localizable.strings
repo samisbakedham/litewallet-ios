@@ -491,7 +491,7 @@
 "LitecoinCard.resetPasswordDetail" = "Enter the email address associated with your Litecoin Card account & look for an email with reset instructions.";
 
 /* Description of action */
-"LitecoinCard.Transfer.description" = "Choose transferring wallet";
+"LitecoinCard.Transfer.description" = "Choose the transferring wallet:";
 
 /* Litewallet balance label */
 "LitecoinCard.Transfer.litewalletBalance" = "Litewallet balance";

@@ -13,14 +13,17 @@ struct PreTransferView: View {
     let mainPadding: CGFloat = 20.0
     let generalCornerRadius: CGFloat = 12.0
     
+    
     //MARK: - Combine Variables
     @ObservedObject
     var viewModel: PreTransferViewModel
     
-    @State
-    var wasTapped: Bool = false
+    @Binding
+    var wasTapped: Bool
     
-    init(viewModel: PreTransferViewModel) {
+    init(viewModel: PreTransferViewModel, wasTapped: Binding<Bool>) {
+        
+        _wasTapped = wasTapped
         self.viewModel = viewModel
     }
     
@@ -35,7 +38,7 @@ struct PreTransferView: View {
                     .frame(maxWidth: .infinity)
                     .padding(mainPadding)
                     .foregroundColor(Color.litecoinGray)
-                    .shadow(color: wasTapped ? .clear : .gray , radius:2.0, x: 3.0, y: 3.0)
+                    .shadow(color: .gray , radius:2.0, x: 3.0, y: 3.0)
                     .overlay(
                         
                         VStack {
@@ -55,7 +58,7 @@ struct PreTransferView: View {
                                         .shadow(radius: 2.0, x: 3.0, y: 3.0)
                                         .padding(.top, 2.0)
                                         .padding(.leading, mainPadding + 12.0)
-
+                                    
                                 } else {
                                     
                                     LitewalletIconView()
@@ -71,9 +74,9 @@ struct PreTransferView: View {
                                     .foregroundColor(.black)
                                     .font(Font(UIFont.barlowSemiBold(size: 20.0)))
                                     .padding(.leading, mainPadding + 12.0)
-
+                                
                                 Text("\(viewModel.balance) Ł")
-                                    .foregroundColor(.black)
+                                    .foregroundColor(viewModel.balance == 0.0 ? .litecoinSilver : .black)
                                     .multilineTextAlignment(.leading)
                                     .font(Font(UIFont.barlowRegular(size: 22.0)))
                                     .padding(.leading, 10.0)
@@ -88,16 +91,15 @@ struct PreTransferView: View {
                     HStack {
                         Spacer()
                         Button(action: {
-                            print("GGGG")
-                        }) {
-                             
-                            Text(viewModel.balance == 0.0 ? "--" : S.LitecoinCard.Transfer.title.localizedUppercase)
+                            self.wasTapped = true
+                        }) { 
+                            Text(S.LitecoinCard.Transfer.title.localizedUppercase)
                                 .frame(width: 180.0,
                                        height: 50.0,
                                        alignment: .center)
-                                .font(Font(UIFont.barlowRegular(size: 22.0)))
-                                .foregroundColor(viewModel.balance == 0.0 ? .gray : .white)
-                                .background(viewModel.balance == 0.0 ? Color.litewalletLightGray : Color.liteWalletBlue)
+                                .font(Font(viewModel.balance == 0.0 ? UIFont.barlowLight(size: 22.0) : UIFont.barlowSemiBold(size: 22.0)))
+                                .foregroundColor(viewModel.balance == 0.0 ? .litecoinSilver : .white)
+                                .background(viewModel.balance == 0.0 ? Color.litewalletLightGray: Color.liteWalletBlue)
                         }
                         .cornerRadius( generalCornerRadius, corners: [.topRight, .bottomLeft])
                         .disabled(viewModel.balance == 0.0 ? true : false)
@@ -111,7 +113,7 @@ struct PreTransferView: View {
                 .frame(maxWidth: .infinity)
                 .padding([.trailing], mainPadding)
             }
-
+            
             
         }
     }
@@ -135,30 +137,30 @@ struct PreTransferView_Previews: PreviewProvider {
         
         Group {
             VStack {
-                PreTransferView(viewModel: lcViewModel)
-                PreTransferView(viewModel: lwViewModel)
-                PreTransferView(viewModel: zerolcViewModel)
-                PreTransferView(viewModel: zerolwViewModel)
+                PreTransferView(viewModel: lcViewModel, wasTapped: .constant(false))
+                PreTransferView(viewModel: lwViewModel, wasTapped: .constant(false))
+                PreTransferView(viewModel: zerolcViewModel, wasTapped: .constant(false))
+                PreTransferView(viewModel: zerolwViewModel, wasTapped: .constant(false))
                 Spacer()
             }
             .previewDevice(PreviewDevice(rawValue: DeviceType.Name.iPhoneSE2))
             .previewDisplayName(DeviceType.Name.iPhoneSE2)
             
             VStack {
-                PreTransferView(viewModel: lcViewModel)
-                PreTransferView(viewModel: lwViewModel)
-                PreTransferView(viewModel: zerolcViewModel)
-                PreTransferView(viewModel: zerolwViewModel)
+                PreTransferView(viewModel: lcViewModel, wasTapped: .constant(false))
+                PreTransferView(viewModel: lwViewModel, wasTapped: .constant(false))
+                PreTransferView(viewModel: zerolcViewModel, wasTapped: .constant(false))
+                PreTransferView(viewModel: zerolwViewModel, wasTapped: .constant(false))
                 Spacer()
             }
             .previewDevice(PreviewDevice(rawValue: DeviceType.Name.iPhone8))
             .previewDisplayName(DeviceType.Name.iPhone8)
             
             VStack {
-                PreTransferView(viewModel: lcViewModel)
-                PreTransferView(viewModel: lwViewModel)
-                PreTransferView(viewModel: zerolcViewModel)
-                PreTransferView(viewModel: zerolwViewModel)
+                PreTransferView(viewModel: lcViewModel, wasTapped: .constant(false))
+                PreTransferView(viewModel: lwViewModel, wasTapped: .constant(false))
+                PreTransferView(viewModel: zerolcViewModel, wasTapped: .constant(false))
+                PreTransferView(viewModel: zerolwViewModel, wasTapped: .constant(false))
                 Spacer()
             }
             .previewDevice(PreviewDevice(rawValue: DeviceType.Name.iPhone12ProMax))
@@ -166,6 +168,7 @@ struct PreTransferView_Previews: PreviewProvider {
         }
     }
 }
+
 
 
 

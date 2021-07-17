@@ -17,11 +17,14 @@ struct CardLoggedInView: View {
     @ObservedObject
     var animatedViewModel = AnimatedCardViewModel()
     
+    @ObservedObject
+    var transferViewModel = TransferAmountSelectionViewModel()
+    
     @State
     private var shouldLogout: Bool = false
     
     @State
-    var balanceText = ""
+    private var didStartTransfer: Bool = false
     
     @State
     var walletBalancesStatus: WalletBalanceStatus = .litewalletAndCardEmpty
@@ -54,115 +57,136 @@ struct CardLoggedInView: View {
                         .padding(.all, 50.0)
                 }
                 
-                Text(S.LitecoinCard.Transfer.description)
-                    .frame(minWidth: 0,
-                           maxWidth: .infinity,
-                           alignment: .center)
-                    .font(Font(UIFont.barlowLight(size: 30.0)))
-                    .foregroundColor(Color(UIColor.liteWalletBlue))
-                    .padding([.top,.leading,.trailing], 50)
-                    .padding(.bottom, 10)
-
- 
-                VStack {
-                    walletViewStack()
-                    Spacer()
+                if didStartTransfer {
+                    
+                    Group {
+                        
+                        VStack {
+                            TransferAmountSelectionView(viewModel: transferViewModel)
+                            Spacer()
+                        }
+                        .padding(.top, 30.0)
+                    }
+                    .transition(.move(edge: .trailing))
+                    .animation(.easeInOut(duration: 0.5))
+                    
+                    
+                    
+                } else {
+                    
+                    Group {
+                        
+                        Text(viewModel.walletBalanceStatus == .litewalletAndCardEmpty ? "" : S.LitecoinCard.Transfer.description)
+                            .frame(minWidth: 0,
+                                   maxWidth: .infinity,
+                                   alignment: .center)
+                            .font(Font(UIFont.barlowLight(size: 30.0)))
+                            .foregroundColor(Color(UIColor.liteWalletBlue))
+                            .padding([.top,.leading,.trailing], 50)
+                            .padding(.bottom, 10)
+                        
+                        VStack {
+                            walletViewStack()
+                            Spacer()
+                        }
+                        .padding(.top, 30.0)
+                    }
+                    .transition(.move(edge: .leading))
+                    .animation(.easeInOut(duration: 0.5))
                 }
-                .padding(.top, 30.0)
-                 
+ 
                 Spacer()
+                
                 pagingIndicatorView()
             }
         }
     }
     
     func walletViewStack() -> AnyView {
-    
-    guard let cardBalance = viewModel.cardWalletDetails?.availableBalance else {
-        return AnyView(EmptyView())
-    }
-    
-    let litewalletBalance = viewModel.litewalletAmount.amountForLtcFormat
         
-    switch viewModel.walletBalanceStatus {
+        guard let cardBalance = viewModel.cardWalletDetails?.availableBalance else {
+            return AnyView(EmptyView())
+        }
         
-        case .litewalletAndCardEmpty:
-            return AnyView (
-                
-                VStack {
-                    PreTransferView(viewModel:
-                                        PreTransferViewModel(walletType: .litecoinCard,
-                                                             balance: cardBalance))
- 
-                    PreTransferView(viewModel:
-                                        PreTransferViewModel(walletType: .litewallet,
-                                                             balance: litewalletBalance))
-
-                    Spacer()
-
-                }
-            )
-        case .cardWalletEmpty:
-            return AnyView(
-                VStack {
-                    PreTransferView(viewModel:
-                                        PreTransferViewModel(walletType: .litewallet,
-                                                             balance: litewalletBalance))
-                    PreTransferView(viewModel:
-                                        PreTransferViewModel(walletType: .litecoinCard,
-                                                             balance: cardBalance))
-                }
-            )
-        case .litewalletEmpty:
-            return AnyView(
-                VStack {
+        let litewalletBalance = viewModel.litewalletAmount.amountForLtcFormat
+        
+        switch viewModel.walletBalanceStatus {
+            
+            case .litewalletAndCardEmpty:
+                return AnyView (
                     
-                    PreTransferView(viewModel:
-                                        PreTransferViewModel(walletType: .litecoinCard,
-                                                             balance: cardBalance))
-                    
-                    PreTransferView(viewModel:
-                                        PreTransferViewModel(walletType: .litewallet,
-                                                             balance: litewalletBalance))
+                    VStack {
+                        PreTransferView(viewModel:
+                                            PreTransferViewModel(walletType: .litecoinCard,
+                                                                 balance: cardBalance), wasTapped: $didStartTransfer)
                         
-                    Spacer()
-
-                }
-            )
-        case .litewalletAndCardNonZero:
-            return AnyView(
-                VStack {
-                    PreTransferView(viewModel:
-                                        PreTransferViewModel(walletType: .litecoinCard,
-                                                                    balance: cardBalance))
-                    
-                    PreTransferView(viewModel:
-                                        PreTransferViewModel(walletType: .litewallet,
-                                                             balance: litewalletBalance))
-                          
-
-                    Spacer()
-                }
-            )
-        case .none:
-            return AnyView(Spacer())
+                        PreTransferView(viewModel:
+                                            PreTransferViewModel(walletType: .litewallet,
+                                                                 balance: litewalletBalance), wasTapped: $didStartTransfer)
+                        
+                        Spacer()
+                        
+                    }
+                )
+            case .cardWalletEmpty:
+                return AnyView(
+                    VStack {
+                        PreTransferView(viewModel:
+                                            PreTransferViewModel(walletType: .litewallet,
+                                                                 balance: litewalletBalance), wasTapped: $didStartTransfer)
+                        PreTransferView(viewModel:
+                                            PreTransferViewModel(walletType: .litecoinCard,
+                                                                 balance: cardBalance), wasTapped: $didStartTransfer)
+                    }
+                )
+            case .litewalletEmpty:
+                return AnyView(
+                    VStack {
+                        
+                        PreTransferView(viewModel:
+                                            PreTransferViewModel(walletType: .litecoinCard,
+                                                                 balance: cardBalance), wasTapped: $didStartTransfer)
+                        
+                        PreTransferView(viewModel:
+                                            PreTransferViewModel(walletType: .litewallet,
+                                                                 balance: litewalletBalance), wasTapped: $didStartTransfer)
+                        
+                        Spacer()
+                        
+                    }
+                )
+            case .litewalletAndCardNonZero:
+                return AnyView(
+                    VStack {
+                        PreTransferView(viewModel:
+                                            PreTransferViewModel(walletType: .litecoinCard,
+                                                                 balance: cardBalance), wasTapped: $didStartTransfer)
+                        
+                        PreTransferView(viewModel:
+                                            PreTransferViewModel(walletType: .litewallet,
+                                                                 balance: litewalletBalance), wasTapped: $didStartTransfer)
+                        
+                        
+                        Spacer()
+                    }
+                )
+            case .none:
+                return AnyView(Spacer())
+        }
     }
-}
     
     func pagingIndicatorView() -> AnyView {
         
         return AnyView (
             HStack {
-                Ellipse().fill(Color.liteWalletBlue).frame(width: 10, height: 10)
-                Ellipse().fill(Color.litecoinGray).frame(width: 10, height: 10)
+                Ellipse().fill(didStartTransfer ? Color.litecoinGray : Color.liteWalletBlue).frame(width: 10, height: 10)
+                Ellipse().fill(didStartTransfer ? Color.liteWalletBlue : Color.litecoinGray).frame(width: 10, height: 10)
             }
             .padding(.all, 40.0)
         )
     }
-     
-}
-
-
+    
+} 
 
 struct CardLoggedInView_Previews: PreviewProvider {
     
@@ -185,6 +209,7 @@ struct CardLoggedInView_Previews: PreviewProvider {
                 .previewDisplayName(DeviceType.Name.iPhone12ProMax)
         }    }
 }
+
 
 
 

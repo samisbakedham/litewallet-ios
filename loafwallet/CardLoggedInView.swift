@@ -62,16 +62,14 @@ struct CardLoggedInView: View {
                     Group {
                         
                         VStack {
-                            TransferAmountSelectionView(viewModel: transferViewModel)
+                            TransferAmountSelectionView(viewModel: transferViewModel, shouldShow: $didStartTransfer)
                             Spacer()
                         }
                         .padding(.top, 30.0)
                     }
                     .transition(.move(edge: .trailing))
                     .animation(.easeInOut(duration: 0.5))
-                    
-                    
-                    
+                      
                 } else {
                     
                     Group {

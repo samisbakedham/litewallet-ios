@@ -11,8 +11,9 @@ import SwiftUI
 struct PreTransferView: View {
     
     let mainPadding: CGFloat = 20.0
-    let generalCornerRadius: CGFloat = 12.0
-    
+    let generalCornerRadius: CGFloat = 8.0
+    let largeHeight: CGFloat = 140.0
+
     
     //MARK: - Combine Variables
     @ObservedObject
@@ -33,7 +34,7 @@ struct PreTransferView: View {
             
             ZStack {
                 RoundedRectangle(cornerRadius: generalCornerRadius)
-                    .frame(height: 150.0,
+                    .frame(height: largeHeight,
                            alignment: .center)
                     .frame(maxWidth: .infinity)
                     .padding(mainPadding)
@@ -42,8 +43,8 @@ struct PreTransferView: View {
                     .overlay(
                         HStack {
                             
-                            VStack(alignment: .leading) {
-                                
+                            VStack(alignment: .center) {
+                                Spacer()
                                 if viewModel.walletType == .litecoinCard {
                                     
                                     Image(viewModel.walletType.description)
@@ -54,41 +55,70 @@ struct PreTransferView: View {
                                                alignment:
                                                 .center)
                                         .contrast(0.95)
-                                        .padding(.top, 2.0)
-                                     
+                                        .shadow(color: .gray, radius:2.0, x: 3.0, y: 3.0)
+                                        .padding([.top,.bottom], 2.0)
+ 
                                 } else {
                                     
                                     LitewalletIconView()
-                                        .padding(.top, 2.0)
+                                        .padding([.top,.bottom], 2.0)
                                 }
                                 
-                                Text("Litecoin Card")
-                                    .frame(width: 110,
-                                           height: 44.0,
-                                           alignment: .center)
-                                    .font(Font(viewModel.balance == 0.0 ? UIFont.barlowLight(size: 18.0) : UIFont.barlowSemiBold(size: 20.0)))
+                                Text(viewModel.walletType == .litecoinCard ? "Litecoin Card" : "Litewallet")
+                                    .font(Font(UIFont.barlowSemiBold(size: 20.0)))
                                     .foregroundColor(Color.liteWalletDarkBlue)
+                                
+                                Spacer()
                             }
-                            .padding(.leading, mainPadding)
-                            
-                            
+                            .padding(.leading, mainPadding + 12.0)
                             
                             VStack {
                                 
                                 Text("\(viewModel.balance) Ł")
+                                    .frame(minWidth: 0, maxWidth: .infinity, alignment: .trailing)
                                     .foregroundColor(viewModel.balance == 0.0 ? .litecoinSilver : .liteWalletDarkBlue)
-                                    .multilineTextAlignment(.leading)
-                                    .font(Font(UIFont.barlowRegular(size: 22.0)))
-                                    .padding(.leading, 10.0)
+                                    .multilineTextAlignment(.trailing)
+                                    .font(Font(UIFont.barlowRegular(size: 20.0)))
+                                    .padding(.trailing, 5.0)
                             }
                             
+                            Spacer()
+                            VStack {
+                                Button(action: {
+                                    self.wasTapped = true
+                                }) {
+                                    
+                                    ZStack {
+                                        
+                                        Rectangle()
+                                            .frame(minHeight: 0,
+                                                   maxHeight: .infinity,
+                                                   alignment: .center)
+                                            .frame(width: 50.0)
+                                            .foregroundColor(viewModel.balance == 0.0 ? Color.litewalletLightGray : Color.liteWalletBlue)
+                                            .shadow(radius: 2.0, x: 3.0, y: 3.0)
+                                        
+                                        Image(systemName: "chevron.right")
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(width: 20, height: 20, alignment: .center)
+                                            .foregroundColor(viewModel.balance == 0.0 ? .litecoinSilver : .white)
+                                    }
+                                }
+                                .cornerRadius(generalCornerRadius, corners: [.topRight, .bottomRight])
+                                .disabled(viewModel.balance == 0.0 ? true : false)
+                            }
+                            .frame(height: largeHeight,
+                                   alignment: .center)
+                            .padding(.trailing, mainPadding)
+
                         }
                         
-                    ) 
-                .frame(height: 150.0,
-                       alignment: .center)
-                .frame(maxWidth: .infinity)
-                .padding([.trailing], mainPadding)
+                    )
+                    .frame(height: largeHeight,
+                           alignment: .center)
+                    .frame(maxWidth: .infinity)
+                    .padding(mainPadding)
             }
             
             
@@ -146,6 +176,7 @@ struct PreTransferView_Previews: PreviewProvider {
         }
     }
 }
+
 
 
 

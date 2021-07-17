@@ -10,7 +10,7 @@ import SwiftUI
 
 struct TransferAmountSelectionView: View {
     
-    let mainPadding: CGFloat = 20.0
+    let mainPadding: CGFloat = 40.0
  
     //MARK: - Combine Variables
     @ObservedObject
@@ -25,7 +25,19 @@ struct TransferAmountSelectionView: View {
     @State
     var transferAmountString: String = ""
     
-    init(viewModel: TransferAmountSelectionViewModel, shouldShow: Binding<Bool>) {
+    //MARK: - Private Variables
+    private var litewalletBalance: Double
+    
+    private var litecoinCardBalance: Double
+    
+    init(viewModel: TransferAmountSelectionViewModel,
+         litewalletBalance: Double,
+         litecoinCardBalance: Double,
+         shouldShow: Binding<Bool>) {
+        
+        self.litewalletBalance = litewalletBalance
+        
+        self.litecoinCardBalance = litecoinCardBalance
         
         _shouldShow = shouldShow
         self.viewModel = viewModel
@@ -33,83 +45,85 @@ struct TransferAmountSelectionView: View {
     
     var body: some View {
         VStack {
-            Button(action: {
-                self.shouldShow = false
-            }, label: {
-                HStack {
+            HStack {
+                Text("Current Balance: ")
+                    .font(Font(UIFont.barlowSemiBold(size: 20.0)))
+                    .foregroundColor(Color.liteWalletBlue)
+                Spacer()
+                Text("250.00 Ł")
+                    .font(Font(UIFont.barlowLight(size: 20.0)))
+                    .foregroundColor(Color.liteWalletBlue)
+            }
+            
+            HStack {
+                Text("Transfer amount: ")
+                    .font(Font(UIFont.barlowSemiBold(size: 20.0)))
+                    .foregroundColor(Color.liteWalletBlue)
+                Spacer()
+                TextField("Enter amount", text: $transferAmountString) { (changedValue) in
+                    print("\(changedValue)")
+                } onCommit: {
+                    print("committed")
                     
-                    Image(systemName: "chevron.backward")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 25, height: 25,
-                               alignment: .leading)
-                        .foregroundColor(Color.liteWalletBlue)
-                        .padding()
-                    
-                    Spacer()
                 }
-            })
-            
-            HStack {
-                Text("Current Balance")
-                Text("30002")
-                Spacer()
+                .multilineTextAlignment(.trailing)
+                .font(Font(UIFont.barlowLight(size: 20.0)))
+                .frame(width: 150)
+                .keyboardType(.decimalPad)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
             }
             
+            Rectangle()
+                .frame(maxWidth: .infinity)
+                .frame(height: 1.5,
+                       alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                .foregroundColor(Color.litecoinGray)
+
             HStack {
-                Text("Current Balance")
-                Text("30002")
+                Text("Ending Balance: ")
+                    .font(Font(UIFont.barlowSemiBold(size: 20.0)))
+                    .foregroundColor(Color.liteWalletBlue)
                 Spacer()
+                Text("200.0 Ł")
+                    .font(Font(UIFont.barlowLight(size: 20.0)))
+                    .foregroundColor(Color.liteWalletBlue)
             }
-            
-            TextField("Enter amount to transfer", text: $transferAmountString) { (changedValue) in
-                print("\(changedValue)")
-            } onCommit: {
-                print("committed")
-                
-            }.font(Font(UIFont.barlowRegular(size: 16.0)))
-            .keyboardType(.decimalPad)
-            .padding([.leading, .trailing, .top], mainPadding)
-            .padding(.top, 12)
-            
-            // Copy the LF Address and paste into the SendViewController
+            .padding(.bottom, 50.0)
+             
             Button(action: {
-                UIPasteboard.general.string = FoundationSupport.supportLTCAddress
+                //Start transfer
             }) {
                 Text("Start transfer".localizedUppercase)
-                    .font(Font(UIFont.barlowSemiBold(size: 16.0)))
-                    .padding()
+                    .font(Font(UIFont.barlowSemiBold(size: 20.0)))
                     .frame(maxWidth: .infinity)
+                    .padding(.all, 10.0)
                     .foregroundColor(Color(UIColor.white))
                     .background(Color(UIColor.liteWalletBlue))
                     .cornerRadius(4.0)
+
             }
-            .padding([.leading, .trailing], mainPadding)
-            .padding(.bottom, 15)
-            
+            .padding(.bottom, 10.0)
+
             // Cancel
             Button(action: {
-                //
+                self.shouldShow = false
             }) {
                 Text(S.Button.cancel.uppercased())
-                    .font(Font(UIFont.customMedium(size: 16.0)))
-                    .padding()
+                    .font(Font(UIFont.barlowSemiBold(size: 20.0)))
                     .frame(maxWidth: .infinity)
                     .foregroundColor(Color(UIColor.liteWalletBlue))
                     .background(Color(UIColor.white))
                     .cornerRadius(4.0)
+                    .padding(.all, 10.0)
                     .overlay(
                         RoundedRectangle(cornerRadius: 4)
-                            .stroke(Color(UIColor.secondaryBorder))
+                            .stroke(Color.litecoinSilver)
                     )
             }
-            .padding([.leading, .trailing], mainPadding)
-            
-            
             Spacer()
+
         }
-        .padding()
-        
+        .padding([.leading, .trailing], mainPadding)
         
     }
 }
@@ -122,21 +136,30 @@ struct TransferAmountSelectionView_Previews: PreviewProvider {
         
         Group {
             VStack {
-                TransferAmountSelectionView(viewModel: viewModel, shouldShow: .constant(true))
+                TransferAmountSelectionView(viewModel: viewModel,
+                                            litewalletBalance: 22.15219,
+                                            litecoinCardBalance: 50.0,
+                                            shouldShow: .constant(true))
                 Spacer()
             }
             .previewDevice(PreviewDevice(rawValue: DeviceType.Name.iPhoneSE2))
             .previewDisplayName(DeviceType.Name.iPhoneSE2)
             
             VStack {
-                TransferAmountSelectionView(viewModel: viewModel, shouldShow: .constant(true))
+                TransferAmountSelectionView(viewModel: viewModel,
+                                            litewalletBalance: 0.0,
+                                            litecoinCardBalance: 50.0,
+                                            shouldShow: .constant(true))
                 Spacer()
             }
             .previewDevice(PreviewDevice(rawValue: DeviceType.Name.iPhone8))
             .previewDisplayName(DeviceType.Name.iPhone8)
             
             VStack {
-                TransferAmountSelectionView(viewModel: viewModel, shouldShow: .constant(true))
+                TransferAmountSelectionView(viewModel: viewModel,
+                                            litewalletBalance: 223.22301,
+                                            litecoinCardBalance: 0.0,
+                                            shouldShow: .constant(true))
                 Spacer()
             }
             .previewDevice(PreviewDevice(rawValue: DeviceType.Name.iPhone12ProMax))

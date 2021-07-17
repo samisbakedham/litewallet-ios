@@ -29,6 +29,14 @@ struct CardLoggedInView: View {
     @State
     var walletBalancesStatus: WalletBalanceStatus = .litewalletAndCardEmpty
     
+    private var litewalletBalance: Double {
+        return viewModel.litewalletAmount.amountForLtcFormat
+    }
+    
+    private var cardBalance: Double {
+        return viewModel.cardWalletDetails?.availableBalance ?? 0.0
+    }
+    
     init(viewModel: CardViewModel) {
         self.viewModel = viewModel
     }
@@ -62,7 +70,10 @@ struct CardLoggedInView: View {
                     Group {
                         
                         VStack {
-                            TransferAmountSelectionView(viewModel: transferViewModel, shouldShow: $didStartTransfer)
+                            TransferAmountSelectionView(viewModel: transferViewModel,
+                                                        litewalletBalance: litewalletBalance,
+                                                        litecoinCardBalance: cardBalance,
+                                                        shouldShow: $didStartTransfer)
                             Spacer()
                         }
                         .padding(.top, 30.0)
@@ -78,7 +89,7 @@ struct CardLoggedInView: View {
                             .frame(minWidth: 0,
                                    maxWidth: .infinity,
                                    alignment: .center)
-                            .font(Font(UIFont.barlowLight(size: 30.0)))
+                            .font(Font(UIFont.barlowLight(size: 26.0)))
                             .foregroundColor(Color(UIColor.liteWalletBlue))
                             .padding([.top,.leading,.trailing], 50)
                             .padding(.bottom, 10)
@@ -101,12 +112,6 @@ struct CardLoggedInView: View {
     }
     
     func walletViewStack() -> AnyView {
-        
-        guard let cardBalance = viewModel.cardWalletDetails?.availableBalance else {
-            return AnyView(EmptyView())
-        }
-        
-        let litewalletBalance = viewModel.litewalletAmount.amountForLtcFormat
         
         switch viewModel.walletBalanceStatus {
             
@@ -177,8 +182,12 @@ struct CardLoggedInView: View {
         
         return AnyView (
             HStack {
-                Ellipse().fill(didStartTransfer ? Color.litecoinGray : Color.liteWalletBlue).frame(width: 10, height: 10)
-                Ellipse().fill(didStartTransfer ? Color.liteWalletBlue : Color.litecoinGray).frame(width: 10, height: 10)
+                Ellipse()
+                    .fill(didStartTransfer ? Color.litecoinGray : .liteWalletBlue)
+                    .frame(width: 10, height: 10)
+                Ellipse()
+                    .fill(didStartTransfer ? Color.liteWalletBlue : .litecoinGray)
+                    .frame(width: 10, height: 10)
             }
             .padding(.all, 40.0)
         )

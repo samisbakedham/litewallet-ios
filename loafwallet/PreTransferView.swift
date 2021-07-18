@@ -22,9 +22,17 @@ struct PreTransferView: View {
     @Binding
     var wasTapped: Bool
     
-    init(viewModel: PreTransferViewModel, wasTapped: Binding<Bool>) {
+    @Binding
+    var walletType: WalletType
+    
+    init(viewModel: PreTransferViewModel,
+         walletType: Binding<WalletType>,
+         wasTapped: Binding<Bool>) {
+        
+        _walletType = walletType
         
         _wasTapped = wasTapped
+        
         self.viewModel = viewModel
     }
     
@@ -85,7 +93,11 @@ struct PreTransferView: View {
                             Spacer()
                             VStack {
                                 Button(action: {
+                                    
                                     self.wasTapped = true
+                                    
+                                    self.walletType = viewModel.walletType
+                                    
                                 }) {
                                     
                                     ZStack {
@@ -145,30 +157,57 @@ struct PreTransferView_Previews: PreviewProvider {
         
         Group {
             VStack {
-                PreTransferView(viewModel: lcViewModel, wasTapped: .constant(false))
-                PreTransferView(viewModel: lwViewModel, wasTapped: .constant(false))
-                PreTransferView(viewModel: zerolcViewModel, wasTapped: .constant(false))
-                PreTransferView(viewModel: zerolwViewModel, wasTapped: .constant(false))
+                
+                PreTransferView(viewModel: lcViewModel,
+                                walletType: .constant(.litecoinCard),
+                                wasTapped: .constant(false))
+                PreTransferView(viewModel: lwViewModel,
+                                walletType: .constant(.litewallet),
+                                wasTapped: .constant(false))
+                PreTransferView(viewModel: zerolcViewModel,
+                                walletType: .constant(.litecoinCard),
+                                wasTapped: .constant(false))
+                PreTransferView(viewModel: zerolwViewModel,
+                                walletType: .constant(.litewallet),
+                                wasTapped: .constant(false))
                 Spacer()
             }
             .previewDevice(PreviewDevice(rawValue: DeviceType.Name.iPhoneSE2))
             .previewDisplayName(DeviceType.Name.iPhoneSE2)
             
             VStack {
-                PreTransferView(viewModel: lcViewModel, wasTapped: .constant(false))
-                PreTransferView(viewModel: lwViewModel, wasTapped: .constant(false))
-                PreTransferView(viewModel: zerolcViewModel, wasTapped: .constant(false))
-                PreTransferView(viewModel: zerolwViewModel, wasTapped: .constant(false))
+                
+                PreTransferView(viewModel: lcViewModel,
+                                 walletType: .constant(.litecoinCard),
+                                 wasTapped: .constant(false))
+                PreTransferView(viewModel: lwViewModel,
+                                walletType: .constant(.litewallet),
+                                wasTapped: .constant(false))
+                PreTransferView(viewModel: zerolcViewModel,
+                                walletType: .constant(.litecoinCard),
+                                wasTapped: .constant(false))
+                PreTransferView(viewModel: zerolwViewModel,
+                                walletType: .constant(.litewallet),
+                                wasTapped: .constant(false))
                 Spacer()
             }
             .previewDevice(PreviewDevice(rawValue: DeviceType.Name.iPhone8))
             .previewDisplayName(DeviceType.Name.iPhone8)
             
             VStack {
-                PreTransferView(viewModel: lcViewModel, wasTapped: .constant(false))
-                PreTransferView(viewModel: lwViewModel, wasTapped: .constant(false))
-                PreTransferView(viewModel: zerolcViewModel, wasTapped: .constant(false))
-                PreTransferView(viewModel: zerolwViewModel, wasTapped: .constant(false))
+                
+                PreTransferView(viewModel: lcViewModel,
+                                walletType: .constant(.litecoinCard),
+                                wasTapped: .constant(false))
+                PreTransferView(viewModel: lwViewModel,
+                                walletType: .constant(.litewallet),
+                                wasTapped: .constant(false))
+                PreTransferView(viewModel: zerolcViewModel,
+                                walletType: .constant(.litecoinCard),
+                                wasTapped: .constant(false))
+                PreTransferView(viewModel: zerolwViewModel,
+                                walletType: .constant(.litewallet),
+                                wasTapped: .constant(false))
                 Spacer()
             }
             .previewDevice(PreviewDevice(rawValue: DeviceType.Name.iPhone12ProMax))

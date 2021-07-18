@@ -18,56 +18,86 @@ struct TransferAmountSelectionView: View {
     
     @Binding
     var shouldShow: Bool
-    
+     
     @State
     var transferAmount: Double = 0.0
     
     @State
-    var transferAmountString: String = ""
+    private var transferAmountString: String = ""
     
+    @State
+    private var newBalance: Double = 0.0
+
     //MARK: - Private Variables
-    private var litewalletBalance: Double
+      
+    private let walletStatus: WalletBalanceStatus
     
-    private var litecoinCardBalance: Double
+    private let transferWallet: WalletType
     
     init(viewModel: TransferAmountSelectionViewModel,
          litewalletBalance: Double,
          litecoinCardBalance: Double,
+         transferWalletType:  WalletType,
+         walletStatus: WalletBalanceStatus,
          shouldShow: Binding<Bool>) {
         
-        self.litewalletBalance = litewalletBalance
+            self.walletStatus = walletStatus
+            
+            self.transferWallet = transferWalletType
+     
+            viewModel.litewalletBalance = litewalletBalance
+            
+            viewModel.litecoinCardBalance = litecoinCardBalance
+             
+            self.viewModel = viewModel
+     
+            _shouldShow = shouldShow
         
-        self.litecoinCardBalance = litecoinCardBalance
-        
-        _shouldShow = shouldShow
-        self.viewModel = viewModel
     }
     
     var body: some View {
+        
+        let binding = Binding<String>(get: {
+            
+            self.transferAmountString
+            
+        }, set: {
+            
+            let currentValue = $0
+            
+            self.transferAmountString = String(viewModel.newBalance(walletType: transferWallet, transferAmount: Double(currentValue)!))
+            
+            print("XXX transferAmountString: \(self.transferAmountString)")
+            
+            newBalance = viewModel.endingBalance(walletType: transferWallet,
+                                           transferAmount: transferAmount)
+            
+            print("XXX newBalance: \(newBalance)")
+        })
+        
         VStack {
             HStack {
-                Text("Current Balance: ")
+                Text(transferWallet.balanceLabel + ": ")
                     .font(Font(UIFont.barlowSemiBold(size: 20.0)))
                     .foregroundColor(Color.liteWalletBlue)
                 Spacer()
-                Text("250.00 Ł")
+                Text(String(viewModel.newBalance(walletType: transferWallet,
+                                                 transferAmount: transferAmount)) + " Ł")
                     .font(Font(UIFont.barlowLight(size: 20.0)))
                     .foregroundColor(Color.liteWalletBlue)
             }
             
             HStack {
-                Text("Transfer amount: ")
+                Text(S.LitecoinCard.Transfer.amount + ": ")
                     .font(Font(UIFont.barlowSemiBold(size: 20.0)))
                     .foregroundColor(Color.liteWalletBlue)
                 Spacer()
-                TextField("Enter amount", text: $transferAmountString) { (changedValue) in
-                    print("\(changedValue)")
-                } onCommit: {
-                    print("committed")
-                    
-                }
+                 
+                TextField(S.LitecoinCard.Transfer.enterAmount,
+                          text: binding)
                 .multilineTextAlignment(.trailing)
-                .font(Font(UIFont.barlowLight(size: 20.0)))
+                .font(Font(UIFont.barlowRegular(size: 20.0)))
+                .foregroundColor(Color.liteWalletBlue)
                 .frame(width: 150)
                 .keyboardType(.decimalPad)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -80,20 +110,21 @@ struct TransferAmountSelectionView: View {
                 .foregroundColor(Color.litecoinGray)
 
             HStack {
-                Text("Ending Balance: ")
+                Text(transferWallet.newBalanceLabel + ": ")
                     .font(Font(UIFont.barlowSemiBold(size: 20.0)))
                     .foregroundColor(Color.liteWalletBlue)
                 Spacer()
-                Text("200.0 Ł")
+                Text(String(newBalance) + " Ł")
                     .font(Font(UIFont.barlowLight(size: 20.0)))
                     .foregroundColor(Color.liteWalletBlue)
             }
             .padding(.bottom, 50.0)
-             
+              
+            //Start transfer
             Button(action: {
-                //Start transfer
+                //API Call to the backend
             }) {
-                Text("Start transfer".localizedUppercase)
+                Text(S.LitecoinCard.Transfer.startTransfer.localizedUppercase)
                     .font(Font(UIFont.barlowSemiBold(size: 20.0)))
                     .frame(maxWidth: .infinity)
                     .padding(.all, 10.0)
@@ -139,6 +170,8 @@ struct TransferAmountSelectionView_Previews: PreviewProvider {
                 TransferAmountSelectionView(viewModel: viewModel,
                                             litewalletBalance: 22.15219,
                                             litecoinCardBalance: 50.0,
+                                            transferWalletType: .litewallet,
+                                            walletStatus: .cardWalletEmpty,
                                             shouldShow: .constant(true))
                 Spacer()
             }
@@ -149,6 +182,8 @@ struct TransferAmountSelectionView_Previews: PreviewProvider {
                 TransferAmountSelectionView(viewModel: viewModel,
                                             litewalletBalance: 0.0,
                                             litecoinCardBalance: 50.0,
+                                            transferWalletType: .litecoinCard,
+                                            walletStatus: .litewalletEmpty,
                                             shouldShow: .constant(true))
                 Spacer()
             }
@@ -159,6 +194,8 @@ struct TransferAmountSelectionView_Previews: PreviewProvider {
                 TransferAmountSelectionView(viewModel: viewModel,
                                             litewalletBalance: 223.22301,
                                             litecoinCardBalance: 0.0,
+                                            transferWalletType: .litewallet,
+                                            walletStatus: .litewalletAndCardNonZero,
                                             shouldShow: .constant(true))
                 Spacer()
             }

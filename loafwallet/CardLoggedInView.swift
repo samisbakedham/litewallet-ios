@@ -27,7 +27,10 @@ struct CardLoggedInView: View {
     private var didStartTransfer: Bool = false
     
     @State
-    var walletBalancesStatus: WalletBalanceStatus = .litewalletAndCardEmpty
+    var walletStatus: WalletBalanceStatus = .litewalletAndCardEmpty
+    
+    @State
+    var currentWalletType: WalletType = .litewallet
     
     private var litewalletBalance: Double {
         return viewModel.litewalletAmount.amountForLtcFormat
@@ -73,6 +76,8 @@ struct CardLoggedInView: View {
                             TransferAmountSelectionView(viewModel: transferViewModel,
                                                         litewalletBalance: litewalletBalance,
                                                         litecoinCardBalance: cardBalance,
+                                                        transferWalletType: currentWalletType,
+                                                        walletStatus: walletStatus,
                                                         shouldShow: $didStartTransfer)
                             Spacer()
                         }
@@ -119,13 +124,20 @@ struct CardLoggedInView: View {
                 return AnyView (
                     
                     VStack {
+                        
                         PreTransferView(viewModel:
                                             PreTransferViewModel(walletType: .litecoinCard,
-                                                                 balance: cardBalance), wasTapped: $didStartTransfer)
+                                                                 balance: cardBalance),
+                                                                walletType: $currentWalletType,
+                                                                wasTapped: $didStartTransfer
+                        ).padding(.bottom, 10.0)
                         
                         PreTransferView(viewModel:
                                             PreTransferViewModel(walletType: .litewallet,
-                                                                 balance: litewalletBalance), wasTapped: $didStartTransfer)
+                                                                 balance: litewalletBalance),
+                                        walletType: $currentWalletType,
+                                        wasTapped: $didStartTransfer
+                        )
                         
                         Spacer()
                         
@@ -134,25 +146,41 @@ struct CardLoggedInView: View {
             case .cardWalletEmpty:
                 return AnyView(
                     VStack {
+                        
                         PreTransferView(viewModel:
                                             PreTransferViewModel(walletType: .litewallet,
-                                                                 balance: litewalletBalance), wasTapped: $didStartTransfer)
+                                                                 balance: litewalletBalance),
+                                                                walletType: $currentWalletType,
+                                                                wasTapped: $didStartTransfer
+                        ).padding(.bottom, 10.0)
+                        
                         PreTransferView(viewModel:
                                             PreTransferViewModel(walletType: .litecoinCard,
-                                                                 balance: cardBalance), wasTapped: $didStartTransfer)
+                                                                 balance: cardBalance),
+                                                                walletType: $currentWalletType,
+                                                                wasTapped: $didStartTransfer
+                        )
+                        
+                        Spacer()
                     }
                 )
             case .litewalletEmpty:
                 return AnyView(
                     VStack {
-                        
+                          
                         PreTransferView(viewModel:
                                             PreTransferViewModel(walletType: .litecoinCard,
-                                                                 balance: cardBalance), wasTapped: $didStartTransfer)
+                                                                 balance: cardBalance),
+                                                                walletType: $currentWalletType,
+                                                                wasTapped: $didStartTransfer
+                        ).padding(.bottom, 10.0)
                         
                         PreTransferView(viewModel:
                                             PreTransferViewModel(walletType: .litewallet,
-                                                                 balance: litewalletBalance), wasTapped: $didStartTransfer)
+                                                                 balance: litewalletBalance),
+                                                                walletType: $currentWalletType,
+                                                                wasTapped: $didStartTransfer
+                        )
                         
                         Spacer()
                         
@@ -161,15 +189,21 @@ struct CardLoggedInView: View {
             case .litewalletAndCardNonZero:
                 return AnyView(
                     VStack {
+                        
                         PreTransferView(viewModel:
                                             PreTransferViewModel(walletType: .litecoinCard,
-                                                                 balance: cardBalance), wasTapped: $didStartTransfer)
+                                                                 balance: cardBalance),
+                                        walletType: $currentWalletType,
+                                        wasTapped: $didStartTransfer
+                        ).padding(.bottom, 10.0)
                         
                         PreTransferView(viewModel:
                                             PreTransferViewModel(walletType: .litewallet,
-                                                                 balance: litewalletBalance), wasTapped: $didStartTransfer)
-                        
-                        
+                                                                 balance: litewalletBalance),
+                                        walletType: $currentWalletType,
+                                        wasTapped: $didStartTransfer
+                        )
+                         
                         Spacer()
                     }
                 )

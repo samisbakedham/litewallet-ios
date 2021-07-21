@@ -18,7 +18,7 @@ enum WalletType: String {
     var description: String {
         switch self {
             case .litecoinCard:
-                return "litecoin-card-front"
+                return "litecoin-front-card-border"
             case .litewallet:
                 return "coinBlueWhite"
         }

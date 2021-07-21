@@ -18,7 +18,7 @@ struct CardLoggedInView: View {
     var animatedViewModel = AnimatedCardViewModel()
     
     @ObservedObject
-    var transferViewModel = TransferAmountSelectionViewModel()
+    var transferViewModel = TransferAmountViewModel()
     
     @State
     private var shouldLogout: Bool = false
@@ -72,8 +72,18 @@ struct CardLoggedInView: View {
                     
                     Group {
                         
+                        Text("Tap arrows to set amount:")
+                            .frame(minWidth: 0,
+                                   maxWidth: .infinity,
+                                   alignment: .center)
+                            .font(Font(UIFont.barlowLight(size: 26.0)))
+                            .foregroundColor(Color(UIColor.liteWalletBlue))
+                            .padding([.top,.leading,.trailing], 50)
+                            .padding(.bottom, 10)
+                        
+                        
                         VStack {
-                            TransferAmountSelectionView(viewModel: transferViewModel,
+                            TransferAmountView(viewModel: transferViewModel,
                                                         litewalletBalance: litewalletBalance,
                                                         litecoinCardBalance: cardBalance,
                                                         transferWalletType: currentWalletType,

@@ -19,8 +19,8 @@ struct MockSeeds {
 }
 
 struct MockData {
-    static let cardImage: Image = Image("litecoin-card-front")
-    static let cardImageString: String = "litecoin-card-front"
+    static let cardImage: Image = Image("litecoin-front-card-border")
+    static let cardImageString: String = "litecoin-front-card-border"
     static let logoImageString: String = "coinBlueWhite"
     static let smallBalance: Double = 0.055122
     static let largeBalance: Double = 48235.059349

@@ -1,5 +1,5 @@
 //
-//  TransferAmountSelectionView.swift
+//  TransferAmountView.swift
 //  loafwallet
 //
 //  Created by Kerry Washington on 7/17/21.
@@ -8,22 +8,17 @@
 
 import SwiftUI
 
-struct TransferAmountSelectionView: View {
+struct TransferAmountView: View {
     
     let mainPadding: CGFloat = 40.0
+    let smallButtonSize: CGFloat = 30.0
  
     //MARK: - Combine Variables
     @ObservedObject
-    var viewModel: TransferAmountSelectionViewModel
+    var viewModel: TransferAmountViewModel
     
     @Binding
     var shouldShow: Bool
-     
-    @State
-    var transferAmount: Double = 0.0
-    
-    @State
-    private var transferAmountString: String = ""
     
     @State
     private var newBalance: Double = 0.0
@@ -34,7 +29,7 @@ struct TransferAmountSelectionView: View {
     
     private let transferWallet: WalletType
     
-    init(viewModel: TransferAmountSelectionViewModel,
+    init(viewModel: TransferAmountViewModel,
          litewalletBalance: Double,
          litecoinCardBalance: Double,
          transferWalletType:  WalletType,
@@ -57,57 +52,34 @@ struct TransferAmountSelectionView: View {
     
     var body: some View {
         
-        let binding = Binding<String>(get: {
-            
-            self.transferAmountString
-            
-        }, set: {
-            
-            let currentValue = $0
-            
-            self.transferAmountString = String(viewModel.newBalance(walletType: transferWallet, transferAmount: Double(currentValue)!))
-            
-            print("XXX transferAmountString: \(self.transferAmountString)")
-            
-            newBalance = viewModel.endingBalance(walletType: transferWallet,
-                                           transferAmount: transferAmount)
-            
-            print("XXX newBalance: \(newBalance)")
-        })
-        
         VStack {
             HStack {
                 Text(transferWallet.balanceLabel + ": ")
                     .font(Font(UIFont.barlowSemiBold(size: 20.0)))
                     .foregroundColor(Color.liteWalletBlue)
+                
                 Spacer()
-                Text(String(viewModel.newBalance(walletType: transferWallet,
-                                                 transferAmount: transferAmount)) + " Ł")
+                
+                Text(viewModel.newBalanceString + " Ł")
                     .font(Font(UIFont.barlowLight(size: 20.0)))
                     .foregroundColor(Color.liteWalletBlue)
             }
+            .padding(.bottom, 5.0)
             
             HStack {
                 Text(S.LitecoinCard.Transfer.amount + ": ")
                     .font(Font(UIFont.barlowSemiBold(size: 20.0)))
                     .foregroundColor(Color.liteWalletBlue)
+                
                 Spacer()
                  
-                TextField(S.LitecoinCard.Transfer.enterAmount,
-                          text: binding)
-                .multilineTextAlignment(.trailing)
-                .font(Font(UIFont.barlowRegular(size: 20.0)))
-                .foregroundColor(Color.liteWalletBlue)
-                .frame(width: 150)
-                .keyboardType(.decimalPad)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
+                Text(viewModel.transferAmountString + " Ł")
+                    .font(Font(UIFont.barlowLight(size: 20.0)))
+                    .foregroundColor(Color.liteWalletBlue)
             }
             
-            Rectangle()
-                .frame(maxWidth: .infinity)
-                .frame(height: 1.5,
-                       alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                .foregroundColor(Color.litecoinGray)
+            //Underline view
+            Divider()
 
             HStack {
                 Text(transferWallet.newBalanceLabel + ": ")
@@ -119,6 +91,103 @@ struct TransferAmountSelectionView: View {
                     .foregroundColor(Color.liteWalletBlue)
             }
             .padding(.bottom, 50.0)
+            
+                Group {
+                    
+                    HStack {
+                    
+                    //Macro Increase
+                    Button(action: {
+                        //1x +
+                    }) {
+                        VStack {
+                        Image(systemName: "chevron.right.2")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .rotationEffect(.degrees(-90))
+                            .frame(width: smallButtonSize,
+                                   height: smallButtonSize,
+                                   alignment: .center)
+                            .foregroundColor(.liteWalletBlue)
+                            .shadow(color: .gray, radius: 3.0, x: 3.0, y: 3.0)
+                            
+                            Text("+1")
+                                .font(Font(UIFont.barlowLight(size: 20.0)))
+                                .foregroundColor(Color.liteWalletBlue)
+                        }
+                    }
+                    .padding([.leading, .trailing])
+                        
+                    //Increase
+                    Button(action: {
+                        //0.1x +
+                    }) {
+                        VStack {
+                            Image(systemName: "chevron.right")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .rotationEffect(.degrees(-90))
+                                .frame(width: smallButtonSize,
+                                       height: smallButtonSize,
+                                       alignment: .center)
+                                .foregroundColor(.liteWalletBlue)
+                                .shadow(color: .gray, radius: 3.0, x: 3.0, y: 3.0)
+                            
+                            Text("+0.1")
+                                .font(Font(UIFont.barlowLight(size: 20.0)))
+                                .foregroundColor(Color.liteWalletBlue)
+                        }
+                    }
+                    .padding(.leading, 30.0)
+                        
+                    Spacer()
+                        
+                    //Decrease
+                    Button(action: {
+                        //-0.1
+                    }) {
+                        VStack {
+                            Image(systemName: "chevron.left")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .rotationEffect(.degrees(-90))
+                                .frame(width: smallButtonSize,
+                                       height: smallButtonSize,
+                                       alignment: .center)
+                                .foregroundColor(.liteWalletBlue)
+                                .shadow(color: .gray, radius: 3.0, x: 3.0, y: 3.0)
+                            
+                            Text("-0.1")
+                                .font(Font(UIFont.barlowLight(size: 20.0)))
+                                .foregroundColor(Color.liteWalletBlue)
+                        }
+                    }
+                    .padding(.trailing, 30.0)
+                        
+                    //Macro Decrease
+                    Button(action: {
+                        //-1
+                    }) {
+                        VStack {
+                            Image(systemName: "chevron.left.2")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .rotationEffect(.degrees(-90))
+                                .frame(width: smallButtonSize,
+                                       height: smallButtonSize,
+                                       alignment: .center)
+                                .foregroundColor(.liteWalletBlue)
+                                .shadow(color: .gray, radius: 3.0, x: 3.0, y: 3.0)
+                            
+                            Text("-1")
+                                .font(Font(UIFont.barlowLight(size: 20.0)))
+                                .foregroundColor(Color.liteWalletBlue)
+                        }
+                    }
+                    .padding([.leading, .trailing])
+                }
+                .padding(.bottom, 30.0)
+            }
               
             //Start transfer
             Button(action: {
@@ -133,7 +202,7 @@ struct TransferAmountSelectionView: View {
                     .cornerRadius(4.0)
 
             }
-            .padding(.bottom, 10.0)
+            .padding(.bottom, 5.0)
 
             // Cancel
             Button(action: {
@@ -159,15 +228,15 @@ struct TransferAmountSelectionView: View {
     }
 }
 
-struct TransferAmountSelectionView_Previews: PreviewProvider {
+struct TransferAmountView_Previews: PreviewProvider {
     
-    static let viewModel = TransferAmountSelectionViewModel()
+    static let viewModel = TransferAmountViewModel()
     
     static var previews: some View {
         
         Group {
             VStack {
-                TransferAmountSelectionView(viewModel: viewModel,
+                TransferAmountView(viewModel: viewModel,
                                             litewalletBalance: 22.15219,
                                             litecoinCardBalance: 50.0,
                                             transferWalletType: .litewallet,
@@ -179,7 +248,7 @@ struct TransferAmountSelectionView_Previews: PreviewProvider {
             .previewDisplayName(DeviceType.Name.iPhoneSE2)
             
             VStack {
-                TransferAmountSelectionView(viewModel: viewModel,
+                TransferAmountView(viewModel: viewModel,
                                             litewalletBalance: 0.0,
                                             litecoinCardBalance: 50.0,
                                             transferWalletType: .litecoinCard,
@@ -191,7 +260,7 @@ struct TransferAmountSelectionView_Previews: PreviewProvider {
             .previewDisplayName(DeviceType.Name.iPhone8)
             
             VStack {
-                TransferAmountSelectionView(viewModel: viewModel,
+                TransferAmountView(viewModel: viewModel,
                                             litewalletBalance: 223.22301,
                                             litecoinCardBalance: 0.0,
                                             transferWalletType: .litewallet,
@@ -204,13 +273,3 @@ struct TransferAmountSelectionView_Previews: PreviewProvider {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-

@@ -65,7 +65,7 @@ struct CardLoggedInView: View {
                         .font(Font(UIFont.barlowSemiBold(size: 22.0)))
                         .foregroundColor(Color(UIColor.liteWalletBlue))
                         .cornerRadius(8.0)
-                        .padding(.all, 50.0)
+                        .padding(.all, 5.0)
                 }
                 
                 if didStartTransfer {
@@ -78,7 +78,7 @@ struct CardLoggedInView: View {
                                    alignment: .center)
                             .font(Font(UIFont.barlowLight(size: 26.0)))
                             .foregroundColor(Color(UIColor.liteWalletBlue))
-                            .padding([.top,.leading,.trailing], 50)
+                            .padding([.top,.leading,.trailing], 10.0)
                             .padding(.bottom, 10)
                         
                         
@@ -233,7 +233,7 @@ struct CardLoggedInView: View {
                     .fill(didStartTransfer ? Color.liteWalletBlue : .litecoinGray)
                     .frame(width: 10, height: 10)
             }
-            .padding(.all, 40.0)
+            .padding(.all, 10.0)
         )
     }
     

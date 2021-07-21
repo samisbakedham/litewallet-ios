@@ -19,34 +19,29 @@ struct TransferAmountView: View {
     
     @Binding
     var shouldShow: Bool
-    
-    @State
-    private var newBalance: Double = 0.0
      
+    var transferAmountTo: String {
+        return viewModel.walletType == .litewallet ?
+            S.LitecoinCard.Transfer.amountToCard :
+            S.LitecoinCard.Transfer.amountToLitewallet
+    }
+    
     @State
-    private var transferAmount: Double = 0.0
+    var sliderValue: Double = 0.0
+     
+    var calculatedValue: Double {
+        return viewModel.currentBalance * sliderValue
+    }
     
-    //MARK: - Private Variables
+    var remainingBalance: Double {
+        return (viewModel.currentBalance - (viewModel.currentBalance * sliderValue)) ?? 0.0
+    }
     
-    private let walletStatus: WalletBalanceStatus
     
-    private let transferWallet: WalletType
-    
+      
     init(viewModel: TransferAmountViewModel,
-         litewalletBalance: Double,
-         litecoinCardBalance: Double,
-         transferWalletType:  WalletType,
-         walletStatus: WalletBalanceStatus,
          shouldShow: Binding<Bool>) {
-        
-        self.walletStatus = walletStatus
-        
-        self.transferWallet = transferWalletType
-        
-        viewModel.litewalletBalance = litewalletBalance
-        
-        viewModel.litecoinCardBalance = litecoinCardBalance
-        
+          
         self.viewModel = viewModel
         
         _shouldShow = shouldShow
@@ -56,87 +51,64 @@ struct TransferAmountView: View {
     var body: some View {
         
         VStack {
+            
+            //Balance Amount
             HStack {
-                Text(transferWallet.balanceLabel + ": ")
+                Text(viewModel.walletType.balanceLabel + ": ")
                     .font(Font(UIFont.barlowSemiBold(size: 18.0)))
                     .foregroundColor(Color.liteWalletBlue)
                 
                 Spacer()
                 
-                Text(viewModel.newBalanceString + " Ł")
+                Text(String(format:"%5.4f", remainingBalance) + " Ł")
                     .font(Font(UIFont.barlowLight(size: 18.0)))
                     .foregroundColor(Color.liteWalletBlue)
+                    .padding(.trailing, 5.0)
             }
             
+            //Transfer Amount
             HStack {
-                Text(S.LitecoinCard.Transfer.amount + ": ")
+                Text(transferAmountTo + ": ")
                     .font(Font(UIFont.barlowSemiBold(size: 18.0)))
                     .foregroundColor(Color.liteWalletBlue)
                 
                 Spacer()
                 
-                Text(String(format:"%5.4f", transferAmount) + " Ł")
+                Text(String(format:"%5.4f", calculatedValue) + " Ł")
                     .font(Font(UIFont.barlowLight(size: 18.0)))
                     .foregroundColor(Color.liteWalletBlue)
+                    .padding(.trailing, 5.0)
+
             }
             
             //Underline view
             Divider()
-            
-            HStack {
-                Text(transferWallet.newBalanceLabel + ": ")
-                    .font(Font(UIFont.barlowSemiBold(size: 18.0)))
-                    .foregroundColor(Color.liteWalletBlue)
-                Spacer()
-                Text(String(newBalance) + " Ł")
-                    .font(Font(UIFont.barlowLight(size: 18.0)))
-                    .foregroundColor(Color.liteWalletBlue)
-            }
-            .padding(.bottom, 20.0)
-            
+              
+            //Amount Slider
             Group {
                 
                 HStack {
                      
-                    //Decrease
-                    Button(action: {
-                        //1x +
-                    }) {
-                        VStack {
-                            Image(systemName: "minus.circle.fill")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: smallButtonSize,
-                                       height: smallButtonSize,
-                                       alignment: .center)
-                                .foregroundColor(.liteWalletBlue)
-                                .shadow(color: .litecoinSilver, radius: 1.0, x: 2.0, y: 2.0)
-                        }
-                    }
-                     
-                    Slider(value: $transferAmount, in: 0...1,
+                    Image(systemName: "minus.circle")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: smallButtonSize,
+                               height: smallButtonSize,
+                               alignment: .center)
+                        .foregroundColor(.liteWalletBlue)
+
+                    Slider(value: $sliderValue, in: 0...1,
                            step: 0.01)
                         .accentColor(.liteWalletBlue)
-                        .onAppear() {
-                        self.transferAmount = 0.0
-                        }
                         .padding()
                     
-                    //Increase
-                    Button(action: {
-                    //1x +
-                    }) {
-                        VStack {
-                            Image(systemName: "plus.circle.fill")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: smallButtonSize,
-                                       height: smallButtonSize,
-                                       alignment: .center)
-                                .foregroundColor(.liteWalletBlue)
-                                .shadow(color: .litecoinSilver, radius: 1.0, x: 2.0, y: 2.0)
-                        }
-                    }
+                    Image(systemName: "plus.circle")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: smallButtonSize,
+                               height: smallButtonSize,
+                               alignment: .center)
+                        .foregroundColor(.liteWalletBlue)
                 }
                 .padding(.bottom, 20.0)
             }
@@ -144,6 +116,7 @@ struct TransferAmountView: View {
             //Start transfer
             Button(action: {
                 //API Call to the backend
+                
             }) {
                 Text(S.LitecoinCard.Transfer.startTransfer.localizedUppercase)
                     .font(Font(UIFont.barlowSemiBold(size: 18.0)))
@@ -182,44 +155,33 @@ struct TransferAmountView: View {
 
 struct TransferAmountView_Previews: PreviewProvider {
     
-    static let viewModel = TransferAmountViewModel()
+    static let lwPlusviewModel = TransferAmountViewModel(walletType: .litewallet, walletStatus: .cardWalletEmpty, litewalletBalance: 520.0, cardBalance: 0.0)
+    
+    static let cardPlusviewModel = TransferAmountViewModel(walletType: .litecoinCard, walletStatus: .litewalletEmpty, litewalletBalance: 0.0, cardBalance: 0.0555)
+    
+    static let lwlcPlusviewModel = TransferAmountViewModel(walletType: .litewallet, walletStatus: .cardWalletEmpty, litewalletBalance: 520.0, cardBalance: 56.0)
     
     static var previews: some View {
         
         Group {
-            VStack {
-                TransferAmountView(viewModel: viewModel,
-                                   litewalletBalance: 22.15219,
-                                   litecoinCardBalance: 50.0,
-                                   transferWalletType: .litewallet,
-                                   walletStatus: .cardWalletEmpty,
+               
+            TransferAmountView(viewModel: lwPlusviewModel,
                                    shouldShow: .constant(true))
-                Spacer()
-            }
             .previewDevice(PreviewDevice(rawValue: DeviceType.Name.iPhoneSE2))
             .previewDisplayName(DeviceType.Name.iPhoneSE2)
             
-            VStack {
-                TransferAmountView(viewModel: viewModel,
-                                   litewalletBalance: 0.0,
-                                   litecoinCardBalance: 50.0,
-                                   transferWalletType: .litecoinCard,
-                                   walletStatus: .litewalletEmpty,
+            TransferAmountView(viewModel: cardPlusviewModel,
                                    shouldShow: .constant(true))
-                Spacer()
-            }
             .previewDevice(PreviewDevice(rawValue: DeviceType.Name.iPhone8))
             .previewDisplayName(DeviceType.Name.iPhone8)
             
-            VStack {
-                TransferAmountView(viewModel: viewModel,
-                                   litewalletBalance: 223.22301,
-                                   litecoinCardBalance: 0.0,
-                                   transferWalletType: .litewallet,
-                                   walletStatus: .litewalletAndCardNonZero,
+            TransferAmountView(viewModel: lwlcPlusviewModel,
+                               shouldShow: .constant(true))
+                .previewDevice(PreviewDevice(rawValue: DeviceType.Name.iPhoneSE2))
+                .previewDisplayName(DeviceType.Name.iPhoneSE2)
+            
+            TransferAmountView(viewModel: lwlcPlusviewModel,
                                    shouldShow: .constant(true))
-                Spacer()
-            }
             .previewDevice(PreviewDevice(rawValue: DeviceType.Name.iPhone12ProMax))
             .previewDisplayName(DeviceType.Name.iPhone12ProMax)
         }

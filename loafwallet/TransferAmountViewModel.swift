@@ -16,17 +16,37 @@ class TransferAmountViewModel: ObservableObject {
     @Published
     var newBalanceString: String = ""
     
+    @Published
+    var walletType: WalletType
+     
+    @Published
+    var walletStatus: WalletBalanceStatus
+ 
     var litewalletBalance: Double =  0.0
     
-    var litecoinCardBalance: Double = 0.0
+    var cardBalance: Double = 0.0
+    
+    var currentBalance: Double = 0.0
     
     var transferAmount: Double {
         return Double(transferAmountString) ?? 0.0
     }
-    
-    init() {
+
+    init(walletType: WalletType,
+         walletStatus: WalletBalanceStatus,
+         litewalletBalance: Double,
+         cardBalance: Double) {
         
+        self.walletType = walletType
+        
+        self.walletStatus = walletStatus
+        
+        self.litewalletBalance = litewalletBalance
+        
+        self.cardBalance = cardBalance
+        
+        currentBalance = walletType == .litewallet ? litewalletBalance : cardBalance
     }
      
 }
-
+ 

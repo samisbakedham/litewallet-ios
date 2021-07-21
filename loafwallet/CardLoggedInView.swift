@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct CardLoggedInView: View {
+struct CardLoggedInView: View { 
     
     //MARK: - Combine Variables
     @ObservedObject
@@ -16,9 +16,6 @@ struct CardLoggedInView: View {
     
     @ObservedObject
     var animatedViewModel = AnimatedCardViewModel()
-    
-    @ObservedObject
-    var transferViewModel = TransferAmountViewModel()
     
     @State
     private var shouldLogout: Bool = false
@@ -72,22 +69,21 @@ struct CardLoggedInView: View {
                     
                     Group {
                         
-                        Text("Tap arrows to set amount:")
+                        Text(S.LitecoinCard.Transfer.setAmount + ": ")
                             .frame(minWidth: 0,
                                    maxWidth: .infinity,
                                    alignment: .center)
-                            .font(Font(UIFont.barlowLight(size: 26.0)))
+                            .font(Font(UIFont.barlowSemiBold(size: 20.0)))
                             .foregroundColor(Color(UIColor.liteWalletBlue))
-                            .padding([.top,.leading,.trailing], 10.0)
-                            .padding(.bottom, 10)
-                        
+                            .padding([.top,.leading,.trailing], 5.0)
+                            .padding(.bottom, 2.0)
                         
                         VStack {
-                            TransferAmountView(viewModel: transferViewModel,
-                                                        litewalletBalance: litewalletBalance,
-                                                        litecoinCardBalance: cardBalance,
-                                                        transferWalletType: currentWalletType,
-                                                        walletStatus: walletStatus,
+                            TransferAmountView(viewModel:
+                                                TransferAmountViewModel(walletType: currentWalletType,
+                                                                                  walletStatus: walletStatus,
+                                                                                  litewalletBalance: litewalletBalance,
+                                                                                  cardBalance: cardBalance),
                                                         shouldShow: $didStartTransfer)
                             Spacer()
                         }

@@ -33,15 +33,6 @@ enum WalletType: String {
         }
     }
     
-    var newBalanceLabel: String {
-        switch self {
-            case .litecoinCard:
-                return S.LitecoinCard.Transfer.newCardBalance
-            case .litewallet:
-                return S.LitecoinCard.Transfer.newLitewalletBalance
-        }
-    }
-    
 }
 
 class PreTransferViewModel: ObservableObject {

@@ -490,8 +490,11 @@
 /* Reset password detail */
 "LitecoinCard.resetPasswordDetail" = "Enter the email address associated with your Litecoin Card account & look for an email with reset instructions.";
 
-/* Amount label */
-"LitecoinCard.Transfer.amount" = "Transfer amount";
+/* Transfer to card label */
+"LitecoinCard.Transfer.amountToCard" = "Transfer to Card";
+
+/* Transfer to Litewallet label */
+"LitecoinCard.Transfer.amountToLitewallet" = "Transfer to Litewallet";
 
 /* Description of action */
 "LitecoinCard.Transfer.description" = "Choose the transferring wallet:";
@@ -502,11 +505,8 @@
 /* Litewallet balance label */
 "LitecoinCard.Transfer.litewalletBalance" = "Litewallet balance";
 
-/* New Card balance label */
-"LitecoinCard.Transfer.newCardBalance" = "New Card balance";
-
-/* New Litewallet balance label */
-"LitecoinCard.Transfer.newLitewalletBalance" = "New Litewallet balance";
+/* Set transfer amount label */
+"LitecoinCard.Transfer.setAmount" = "Slide to set transfer amount";
 
 /* Start transfer label */
 "LitecoinCard.Transfer.startTransfer" = "Start transfer";

@@ -1381,8 +1381,11 @@
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$d af %2$d";
 
-/* Amount label */
-"LitecoinCard.Transfer.amount" = "";
+/* Transfer to card label */
+"LitecoinCard.Transfer.amountToCard" = "";
+
+/* Transfer to Litewallet label */
+"LitecoinCard.Transfer.amountToLitewallet" = "";
 
 /* Description of action */
 "LitecoinCard.Transfer.description" = "";
@@ -1393,11 +1396,8 @@
 /* Litewallet balance label */
 "LitecoinCard.Transfer.litewalletBalance" = "";
 
-/* New Card balance label */
-"LitecoinCard.Transfer.newCardBalance" = "";
-
-/* New Litewallet balance label */
-"LitecoinCard.Transfer.newLitewalletBalance" = "";
+/* Set transfer amount label */
+"LitecoinCard.Transfer.setAmount" = "";
 
 /* Start transfer label */
 "LitecoinCard.Transfer.startTransfer" = "";

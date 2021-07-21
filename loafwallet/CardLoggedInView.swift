@@ -41,6 +41,21 @@ struct CardLoggedInView: View {
         self.viewModel = viewModel
     }
     
+    private func pagingIndicatorView() -> AnyView {
+        
+        return AnyView (
+            HStack {
+                Ellipse()
+                    .fill(didStartTransfer ? Color.litecoinGray : .liteWalletBlue)
+                    .frame(width: 10, height: 10)
+                Ellipse()
+                    .fill(didStartTransfer ? Color.liteWalletBlue : .litecoinGray)
+                    .frame(width: 10, height: 10)
+            }
+            .padding(.all, 10.0)
+        )
+    }
+    
     var body: some View {
         
         GeometryReader { geometry in
@@ -217,22 +232,7 @@ struct CardLoggedInView: View {
                 return AnyView(Spacer())
         }
     }
-    
-    func pagingIndicatorView() -> AnyView {
-        
-        return AnyView (
-            HStack {
-                Ellipse()
-                    .fill(didStartTransfer ? Color.litecoinGray : .liteWalletBlue)
-                    .frame(width: 10, height: 10)
-                Ellipse()
-                    .fill(didStartTransfer ? Color.liteWalletBlue : .litecoinGray)
-                    .frame(width: 10, height: 10)
-            }
-            .padding(.all, 10.0)
-        )
-    }
-    
+     
 } 
 
 struct CardLoggedInView_Previews: PreviewProvider {

@@ -499,6 +499,9 @@
 /* Description of action */
 "LitecoinCard.Transfer.description" = "Choose the transferring wallet:";
 
+/* Destination address label */
+"LitecoinCard.Transfer.destinationAddress" = "Address";
+
 /* Enter amount label */
 "LitecoinCard.Transfer.enterAmount" = "Enter amount";
 

@@ -151,6 +151,8 @@ enum S {
             static let amountToLitewallet = NSLocalizedString("LitecoinCard.Transfer.amountToLitewallet", value: "Transfer to Litewallet", comment: "Transfer to Litewallet label")
             static let setAmount = NSLocalizedString("LitecoinCard.Transfer.setAmount", value: "Slide to set transfer amount", comment: "Set transfer amount label")
             static let startTransfer = NSLocalizedString("LitecoinCard.Transfer.startTransfer", value: "Start transfer", comment: "Start transfer label")
+            static let destinationAddress = NSLocalizedString("LitecoinCard.Transfer.destinationAddress", value: "Destination address", comment: "Destination address label")
+
              
         }
         
